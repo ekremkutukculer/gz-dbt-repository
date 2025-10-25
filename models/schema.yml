@@ -2,10 +2,39 @@ version: 2
 sources:
   - name: raw
     schema: gz_raw_data
+    description: hamverilerin olduğu kaynak
     tables:
       - name: sales
         identifier: raw_gz_sales
+        description: Satış tablosu
+        columns:
+          - name: pdt_id
+            description: Urun id'si
+          - name: orders_id
+            description: Siparis ID'si
+        tests:
+          - unique:
+              column_name: "(orders_id || '-' || pdt_id) "
+          - dbt_utils.unique_combination_of_columns:
+              arguments:
+                combination_of_columns:
+                  - orders_id
+                  - pdt_id
       - name: product
         identifier: raw_gz_product
+        description: ürün tablosu
+        columns:
+          - name: products_id
+            description: Urun ID'si
+            tests:
+              - unique
+              - not_null
       - name: ship
         identifier: raw_gz_ship
+        description: nakliye tablosu
+        columns:
+          - name: orders_id
+            description: Siparis ID'si
+            tests:
+              - unique
+              - not_null

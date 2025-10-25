@@ -7,11 +7,18 @@ sources:
       - name: sales
         identifier: raw_gz_sales
         description: Satış tablosu
+        loaded_at_field: "CAST(date_date AS TIMESTAMP)"
+        freshness: 
+          warn_after:
+            count: 90
+            period: day
         columns:
           - name: pdt_id
             description: Urun id'si
           - name: orders_id
             description: Siparis ID'si
+          - name: date_date
+            description: Satış tarihi
         tests:
           - unique:
               column_name: "(orders_id || '-' || pdt_id) "

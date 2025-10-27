@@ -8,7 +8,7 @@ sources:
         identifier: raw_gz_sales
         description: Satış tablosu
         loaded_at_field: "CAST(date_date AS TIMESTAMP)"
-        freshness: 
+        freshness:
           warn_after:
             count: 90
             period: day
@@ -45,4 +45,54 @@ sources:
             tests:
               - unique
               - not_null
+      - name: adwords
+        identifier: raw_gz_adwords
+      - name: bing
+        identifier: raw_gz_bing
+      - name: criteo
+        identifier: raw_gz_criteo
+      - name: facebook
+        identifier: raw_gz_facebook
+models:
+  - name: int_campaigns
+    description: tüm kaynaklardan gelen verilerin birleştirildiği ara model
+    columns:
+      - name: paid_source
+        description: reklam kaynağı (adwords, bing, criteo, facebook)
+        tests:
+          - not_null
+      - name: campaign_name
+        description: kampanya adı
+        tests:
+          - not_null
+  - name: int_campaigns_day
+    description: int_campaigns modelinin her gün için toplu versiyonu
+    columns:
+      - name: date_date
+        description: verinin ait olduğu tarih
+        tests:
+          - not_null
+      - name: ads_cost
+        description: günlük toplam reklam maliyeti
+        tests:
+          - not_null
+      - name: ads_impressions
+        description: günlük toplam gösterim
+        tests:
+          - not_null
+      - name: ads_clicks
+        description: günlük toplam tıklanma
+        tests:
+          - not_null
+  - name: finance_campaigns_day
+    description: global kpi
+    columns:
+      - name: ads_margin
+        description: operational_margin - ads_cost
+        tests:
+          - not_null
+      - name: average_basket
+        description: her gün için ortalama sepet tutarı
+        tests:
+          - not_null
 
